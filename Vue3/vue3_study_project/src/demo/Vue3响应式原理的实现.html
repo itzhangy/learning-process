@@ -1,0 +1,72 @@
+<!--
+ * @Description: 
+ * @Author: yourName
+ * @Date: 2022-04-14 14:22:26
+ * @LastEditors: yourName
+ * @LastEditTime: 2022-04-14 14:53:19
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // 源数据
+      let person = {
+        name: 'zhangy',
+        age: 24
+      }
+
+      // vue2实现方式
+      // 数据劫持，发布订阅者模式
+      // let p = {}
+      // Object.defineProperty(p, 'name', {
+      //   get() {
+      //     console.log(`有人读取了name属性，更新界面~`)
+      //     return person.name
+      //   },
+      //   set(value) {
+      //     console.log(`有人修改了name属性，更新界面~`)
+      //     person.name = value
+      //   }
+      // })
+
+      // Object.defineProperty(p, 'age', {
+      //   get() {
+      //     console.log(`有人读取了age属性，更新界面~`)
+      //     return person.age
+      //   },
+      //   set(value) {
+      //     console.log(`有人修改了age属性，更新界面~`)
+      //     person.age = value
+      //   }
+      // })
+
+      //  缺点：不能监测添加 删除 数组下标方式
+      // this.$set(p, 'sex', '男')
+
+      // vue3实现方式
+      // Proxy代理
+      let p = new Proxy(person, {
+        get(target, propName) {
+          console.log(`有人读取了${propName}属性，更新界面~~`)
+          return target[propName]
+        },
+        set(target, propName, value) {
+          // set方法可以直接监测到新增元素
+          console.log(`有人修改了${propName}属性，更新界面~~`)
+          target[propName] = value
+        },
+        // 响应式删除
+        deleteProperty(target, propName) {
+          console.log(`有人删除了${propName}属性，更新界面~~`)
+          return delete target[propName]
+        }
+      })
+    </script>
+  </body>
+</html>
